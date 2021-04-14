@@ -9,7 +9,7 @@ import SwiftUI
 import Combine
 
 class SearchViewModel: ObservableObject {
-
+    
     @Published var podcasts = [Podcast]()
     var cancellable: Cancellable?
     var apiClient: APIClient
@@ -19,8 +19,8 @@ class SearchViewModel: ObservableObject {
         cancellable = apiClient.search("swift")
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in }) { (searchEnvelope) in
-            self.podcasts = searchEnvelope.results
-        }
+                self.podcasts = searchEnvelope.results
+            }
     }
 }
 
@@ -31,6 +31,7 @@ struct ContentView: View {
     var body: some View {
         
         VStack {
+            Image(systemName: "magnifyingglass.circle.fill").padding(.leading, 8)
             TextField("Search for Podcasts", text: .constant(""))
             List {
                 ForEach(viewModel.podcasts, id: \Podcast.collectionId) { (podcast) in
