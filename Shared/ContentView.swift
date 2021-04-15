@@ -13,14 +13,30 @@ class SearchViewModel: ObservableObject {
     @Published var podcasts = [Podcast]()
     var cancellable: Cancellable?
     var apiClient: APIClient
+    @Published var search = ""
     
     init(apiClient: APIClient) {
         self.apiClient = apiClient
-        cancellable = apiClient.search("swift")
+        
+        self.cancellable = $search
+            .debounce(for: 0.5, scheduler: DispatchQueue.main)
+            .flatMap({ (query) in
+                apiClient.search(query)
+            })
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { _ in }) { (searchEnvelope) in
-                self.podcasts = searchEnvelope.results
+            .sink(receiveCompletion: { _ in }) { [weak self] (searchEnvelope) in
+                self?.podcasts = searchEnvelope.results
             }
+            
+            
+//            .sink { [weak self] (query) in
+//            self?.searchCancellable = apiClient.search(query)
+//                .receive(on: DispatchQueue.main)
+//                .sink(receiveCompletion: { _ in }) { (searchEnvelope) in
+//                    self?.podcasts = searchEnvelope.results
+//                }
+//        }
+        
     }
 }
 
@@ -31,11 +47,17 @@ struct ContentView: View {
     var body: some View {
         
         VStack {
-            Image(systemName: "magnifyingglass.circle.fill").padding(.leading, 8)
-            TextField("Search for Podcasts", text: .constant(""))
+            HStack{
+                Image(systemName: "magnifyingglass.circle.fill")
+                TextField("Search for Podcasts", text: $viewModel.search)
+            }.padding()
             List {
                 ForEach(viewModel.podcasts, id: \Podcast.collectionId) { (podcast) in
-                    Text(podcast.collectionName)
+                    NavigationLink.init(
+                        destination: /*@START_MENU_TOKEN@*/Text("Destination")/*@END_MENU_TOKEN@*/,
+                        label: {
+                            Text(podcast.collectionName)
+                        })
                 }
             }
         }
@@ -46,8 +68,8 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        
-        ContentView(viewModel: SearchViewModel(apiClient: .live))
+        NavigationView { ContentView(viewModel: SearchViewModel(apiClient: .live))
+        }
     }
 }
 

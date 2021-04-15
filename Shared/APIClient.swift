@@ -20,11 +20,22 @@ struct Podcast: Decodable {
     let genres: [String]
 }
 
+struct FetchEpisodeEnvelope: Decodable {
+    let resultsCount: Int
+    let results: [Episode]
+}
+
+struct Episode: Decodable {
+    let trackTimeMillis: Int
+    let trackName: String
+    let description: String
+}
+
 
 struct APIClient {
 
     var search: (String) -> AnyPublisher<SearchEnvelope, Error>
-    
+//    var fetchPodcast: (Int) -> AnyPublisher
 }
 
 extension APIClient {
@@ -36,5 +47,8 @@ extension APIClient {
                 .decode(type: SearchEnvelope.self, decoder: JSONDecoder())
                 .eraseToAnyPublisher()
         }
+        
     )
 }
+
+//https://itunes.apple.com/lookup?id=1251196416&country=US&media=podcast&entity=podcastEpisode&limit=100
