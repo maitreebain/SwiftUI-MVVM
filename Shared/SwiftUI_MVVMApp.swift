@@ -11,7 +11,9 @@ import SwiftUI
 struct SwiftUI_MVVMApp: App {
     var body: some Scene {
         WindowGroup {
+            NavigationView {
             ContentView(viewModel: SearchViewModel(apiClient: .live))
+            }
         }
     }
 }

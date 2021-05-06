@@ -15,9 +15,9 @@ class SearchViewModel: ObservableObject {
     var apiClient: APIClient
     @Published var search = ""
     
-    init(apiClient: APIClient) {
+    init(apiClient: APIClient, podcasts: [Podcast] = []) {
         self.apiClient = apiClient
-        
+        self.podcasts = podcasts
         self.cancellable = $search
             .debounce(for: 0.5, scheduler: DispatchQueue.main)
             .flatMap({ (query) in
@@ -50,13 +50,22 @@ struct ContentView: View {
             HStack{
                 Image(systemName: "magnifyingglass.circle.fill")
                 TextField("Search for Podcasts", text: $viewModel.search)
-            }.padding()
+            }
+            .padding(8)
+            .background(Color.init(white: 0.95))
+            .cornerRadius(8.0)
+            .padding(.horizontal)
+            
             List {
+                
                 ForEach(viewModel.podcasts, id: \Podcast.collectionId) { (podcast) in
                     NavigationLink.init(
                         destination: /*@START_MENU_TOKEN@*/Text("Destination")/*@END_MENU_TOKEN@*/,
                         label: {
-                            Text(podcast.collectionName)
+                            VStack(alignment: .leading, spacing: 8) {
+                            Text(podcast.collectionName).font(.headline)
+                            Text(podcast.artistName)
+                            }
                         })
                 }
             }
@@ -68,7 +77,15 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationView { ContentView(viewModel: SearchViewModel(apiClient: .live))
+        NavigationView {
+            ContentView(
+                viewModel: SearchViewModel(
+                    apiClient: .live,
+                    podcasts: [
+                        .init(collectionId: 1, artistName: "Lady Gaga", collectionName: "Paparazzi", artworkUrl30: "", genres: ["Pop"])
+                    ])
+        
+        )
         }
     }
 }
