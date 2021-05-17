@@ -63,6 +63,7 @@ struct ContentView: View {
                         destination: /*@START_MENU_TOKEN@*/Text("Destination")/*@END_MENU_TOKEN@*/,
                         label: {
                             VStack(alignment: .leading, spacing: 8) {
+                                Image(podcast.artworkUrl30)
                             Text(podcast.collectionName).font(.headline)
                             Text(podcast.artistName)
                             }
