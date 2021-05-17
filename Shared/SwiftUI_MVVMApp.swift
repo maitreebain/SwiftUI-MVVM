@@ -13,6 +13,7 @@ struct SwiftUI_MVVMApp: App {
         WindowGroup {
             NavigationView {
             ContentView(viewModel: SearchViewModel(apiClient: .live))
+                .navigationBarTitle("Podcasts")
             }
         }
     }

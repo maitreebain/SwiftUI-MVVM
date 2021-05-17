@@ -17,6 +17,8 @@ struct Podcast: Decodable {
     let artistName: String
     let collectionName: String
     let artworkUrl30: String
+    let artworkUrl60: String
+    let artworkUrl100: String
     let genres: [String]
 }
 
@@ -36,6 +38,7 @@ struct APIClient {
 
     var search: (String) -> AnyPublisher<SearchEnvelope, Error>
 //    var fetchPodcast: (Int) -> AnyPublisher
+    
 }
 
 extension APIClient {
@@ -48,6 +51,8 @@ extension APIClient {
                 .eraseToAnyPublisher()
         }
         
+        
+        //need function to get image using urlsession
     )
 }
 

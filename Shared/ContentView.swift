@@ -27,15 +27,15 @@ class SearchViewModel: ObservableObject {
             .sink(receiveCompletion: { _ in }) { [weak self] (searchEnvelope) in
                 self?.podcasts = searchEnvelope.results
             }
-            
-            
-//            .sink { [weak self] (query) in
-//            self?.searchCancellable = apiClient.search(query)
-//                .receive(on: DispatchQueue.main)
-//                .sink(receiveCompletion: { _ in }) { (searchEnvelope) in
-//                    self?.podcasts = searchEnvelope.results
-//                }
-//        }
+        
+        
+        //            .sink { [weak self] (query) in
+        //            self?.searchCancellable = apiClient.search(query)
+        //                .receive(on: DispatchQueue.main)
+        //                .sink(receiveCompletion: { _ in }) { (searchEnvelope) in
+        //                    self?.podcasts = searchEnvelope.results
+        //                }
+        //        }
         
     }
 }
@@ -62,11 +62,7 @@ struct ContentView: View {
                     NavigationLink.init(
                         destination: /*@START_MENU_TOKEN@*/Text("Destination")/*@END_MENU_TOKEN@*/,
                         label: {
-                            VStack(alignment: .leading, spacing: 8) {
-                                Image(podcast.artworkUrl30)
-                            Text(podcast.collectionName).font(.headline)
-                            Text(podcast.artistName)
-                            }
+                            PodcastRowView(podcast: podcast)
                         })
                 }
             }
@@ -76,6 +72,73 @@ struct ContentView: View {
     
 }
 
+struct PodcastRowView: View {
+    
+    let podcast: Podcast
+    
+    @StateObject var imageLoader = ImageLoader()
+    
+    var body: some View {
+        HStack {
+            Group{
+            if let image = imageLoader.image {
+                Image(uiImage: image)
+                    .resizable()
+            } else {
+                Rectangle()
+                    .foregroundColor(.gray)
+            }
+            }.frame(width: 60, height: 60)
+            
+            //            imageLoader.image.map({ image in
+            //                Image(uiImage: image)
+            //            })
+            VStack(alignment: .leading, spacing: 8) {
+                Text(podcast.collectionName).font(.headline)
+                Text(podcast.artistName)
+            }
+        }.onAppear(perform: {
+            imageLoader.onAppear(podcast)
+        }).onDisappear(perform: {
+            imageLoader.onDisappear()
+        })
+    }
+}
+
+class ImageLoader: ObservableObject {
+    
+    @Published var image: UIImage?
+    var cancellable: Cancellable?
+    
+    func onAppear(_ podcast: Podcast) {
+        guard let url = URL(string: podcast.artworkUrl60) else {
+            return
+        }
+        
+       cancellable = URLSession.shared.dataTaskPublisher(for: url)
+            .receive(on: DispatchQueue.main)
+            .sink(
+                receiveCompletion: { _ in },
+                receiveValue: { data, response in
+                    
+                        self.image = UIImage.init(data: data)
+                })
+        
+        //        URLSession.shared.dataTask(with: url) { data, response, error in
+        //
+        //            if let data = data {
+        //                DispatchQueue.main.async {
+        //                    self.image = UIImage.init(data: data)
+        //                }
+        //            }
+        //        }.resume()
+    }
+    
+    func onDisappear() {
+        cancellable = nil
+    }
+}
+
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
@@ -83,10 +146,17 @@ struct ContentView_Previews: PreviewProvider {
                 viewModel: SearchViewModel(
                     apiClient: .live,
                     podcasts: [
-                        .init(collectionId: 1, artistName: "Lady Gaga", collectionName: "Paparazzi", artworkUrl30: "", genres: ["Pop"])
+                        .init(
+                            collectionId: 1,
+                            artistName: "Lady Gaga",
+                            collectionName: "Paparazzi",
+                            artworkUrl30: "",
+                            artworkUrl60: "",
+                            artworkUrl100: "",
+                            genres: ["Pop"])
                     ])
-        
-        )
+                
+            )
         }
     }
 }
