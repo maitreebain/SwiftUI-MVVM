@@ -13,8 +13,8 @@ class ImageLoader: ObservableObject {
     @Published var image: UIImage?
     var cancellable: Cancellable?
     
-    func onAppear(_ podcast: Podcast) {
-        guard let url = URL(string: podcast.artworkUrl60) else {
+    func onAppear(_ url: String) {
+        guard let url = URL(string: url) else {
             return
         }
         

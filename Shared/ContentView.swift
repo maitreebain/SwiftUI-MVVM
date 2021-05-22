@@ -98,7 +98,7 @@ struct PodcastRowView: View {
                 Text(podcast.artistName)
             }
         }.onAppear(perform: {
-            imageLoader.onAppear(podcast)
+            imageLoader.onAppear(podcast.artworkUrl60)
         }).onDisappear(perform: {
             imageLoader.cancellable?.cancel()
         })
