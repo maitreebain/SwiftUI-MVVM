@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		804C5C202658A22F00FF7CDE /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 804C5C1F2658A22F00FF7CDE /* ImageLoader.swift */; };
+		804C5C212658A22F00FF7CDE /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 804C5C1F2658A22F00FF7CDE /* ImageLoader.swift */; };
 		80BC40082614F37A00034765 /* Tests_iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80BC40072614F37A00034765 /* Tests_iOS.swift */; };
 		80BC40132614F37A00034765 /* Tests_macOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80BC40122614F37A00034765 /* Tests_macOS.swift */; };
 		80BC40152614F37A00034765 /* SwiftUI_MVVMApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80BC3FEC2614F37800034765 /* SwiftUI_MVVMApp.swift */; };
@@ -37,6 +39,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		804C5C1F2658A22F00FF7CDE /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
 		80BC3FEC2614F37800034765 /* SwiftUI_MVVMApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUI_MVVMApp.swift; sourceTree = "<group>"; };
 		80BC3FED2614F37800034765 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		80BC3FEE2614F37A00034765 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -103,6 +106,7 @@
 			children = (
 				80BC3FEC2614F37800034765 /* SwiftUI_MVVMApp.swift */,
 				80BC3FED2614F37800034765 /* ContentView.swift */,
+				804C5C1F2658A22F00FF7CDE /* ImageLoader.swift */,
 				80BC402D2614F3B500034765 /* APIClient.swift */,
 				80BC3FEE2614F37A00034765 /* Assets.xcassets */,
 			);
@@ -314,6 +318,7 @@
 			files = (
 				80BC40172614F37A00034765 /* ContentView.swift in Sources */,
 				80BC40152614F37A00034765 /* SwiftUI_MVVMApp.swift in Sources */,
+				804C5C202658A22F00FF7CDE /* ImageLoader.swift in Sources */,
 				80BC402E2614F3B500034765 /* APIClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -324,6 +329,7 @@
 			files = (
 				80BC40182614F37A00034765 /* ContentView.swift in Sources */,
 				80BC40162614F37A00034765 /* SwiftUI_MVVMApp.swift in Sources */,
+				804C5C212658A22F00FF7CDE /* ImageLoader.swift in Sources */,
 				80BC402F2614F3B500034765 /* APIClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

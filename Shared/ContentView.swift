@@ -100,44 +100,45 @@ struct PodcastRowView: View {
         }.onAppear(perform: {
             imageLoader.onAppear(podcast)
         }).onDisappear(perform: {
-            imageLoader.onDisappear()
+            imageLoader.cancellable?.cancel()
         })
+        
     }
 }
 
-class ImageLoader: ObservableObject {
-    
-    @Published var image: UIImage?
-    var cancellable: Cancellable?
-    
-    func onAppear(_ podcast: Podcast) {
-        guard let url = URL(string: podcast.artworkUrl60) else {
-            return
-        }
-        
-       cancellable = URLSession.shared.dataTaskPublisher(for: url)
-            .receive(on: DispatchQueue.main)
-            .sink(
-                receiveCompletion: { _ in },
-                receiveValue: { data, response in
-                    
-                        self.image = UIImage.init(data: data)
-                })
-        
-        //        URLSession.shared.dataTask(with: url) { data, response, error in
-        //
-        //            if let data = data {
-        //                DispatchQueue.main.async {
-        //                    self.image = UIImage.init(data: data)
-        //                }
-        //            }
-        //        }.resume()
-    }
-    
-    func onDisappear() {
-        cancellable = nil
-    }
-}
+//class ImageLoader: ObservableObject {
+//
+//    @Published var image: UIImage?
+//    var cancellable: Cancellable?
+//
+//    func onAppear(_ podcast: Podcast) {
+//        guard let url = URL(string: podcast.artworkUrl60) else {
+//            return
+//        }
+//
+//       cancellable = URLSession.shared.dataTaskPublisher(for: url)
+//            .receive(on: DispatchQueue.main)
+//            .sink(
+//                receiveCompletion: { _ in },
+//                receiveValue: { data, response in
+//
+//                        self.image = UIImage.init(data: data)
+//                })
+//
+//        //        URLSession.shared.dataTask(with: url) { data, response, error in
+//        //
+//        //            if let data = data {
+//        //                DispatchQueue.main.async {
+//        //                    self.image = UIImage.init(data: data)
+//        //                }
+//        //            }
+//        //        }.resume()
+//    }
+//
+//    func onDisappear() {
+//        cancellable = nil
+//    }
+//}
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
