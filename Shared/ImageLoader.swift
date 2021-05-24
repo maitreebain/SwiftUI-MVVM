@@ -27,5 +27,9 @@ class ImageLoader: ObservableObject {
                         self.image = UIImage.init(data: data)
                 })
 }
+    
+    func onDisappear() {
+        cancellable = nil
+    }
 
 }

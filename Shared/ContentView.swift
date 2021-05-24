@@ -99,7 +99,7 @@ struct PodcastRowView: View {
         }.onAppear(perform: {
             imageLoader.onAppear(podcast.artworkUrl60)
         }).onDisappear(perform: {
-            imageLoader.cancellable?.cancel()
+            imageLoader.onDisappear()
         })
         
     }
@@ -111,16 +111,8 @@ struct ContentView_Previews: PreviewProvider {
             ContentView(
                 viewModel: SearchViewModel(
                     apiClient: .live,
-                    podcasts: [
-                        .init(
-                            collectionId: 1,
-                            artistName: "Lady Gaga",
-                            collectionName: "Paparazzi",
-                            artworkUrl30: "",
-                            artworkUrl60: "",
-                            artworkUrl100: "",
-                            genres: ["Pop"])
-                    ])
+                    podcasts: [.mock, .mock]
+                    )
                 
             )
         }
