@@ -18,9 +18,11 @@ struct PodcastDetailView: View {
                 Image("")
                     .frame(width: 200, height: 200, alignment: .center)
                     .background(Color.gray)
+                    .cornerRadius(4.0)
+                    .border(Color.white, width: 8)
                 VStack(alignment: .leading) {
                     Text(podcast.collectionName)
-                        .font(.largeTitle)
+                        .font(.largeTitle).bold()
                     Text(podcast.artistName)
                         .padding(.bottom)
                     Text("Episodes")
