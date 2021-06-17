@@ -59,7 +59,7 @@ struct ContentView: View {
                 
                 ForEach(viewModel.podcasts, id: \Podcast.collectionId) { (podcast) in
                     NavigationLink.init(
-                        destination: /*@START_MENU_TOKEN@*/Text("Destination")/*@END_MENU_TOKEN@*/,
+                        destination: PodcastDetailView(podcast: podcast, episodes: []),
                         label: {
                             PodcastRowView(podcast: podcast)
                         })
@@ -80,13 +80,13 @@ struct PodcastRowView: View {
     var body: some View {
         HStack {
             Group{
-            if let image = imageLoader.image {
-                Image(uiImage: image)
-                    .resizable()
-            } else {
-                Rectangle()
-                    .foregroundColor(.gray)
-            }
+                if let image = imageLoader.image {
+                    Image(uiImage: image)
+                        .resizable()
+                } else {
+                    Rectangle()
+                        .foregroundColor(.gray)
+                }
             }.frame(width: 60, height: 60)
             
             //            imageLoader.image.map({ image in
@@ -112,7 +112,7 @@ struct ContentView_Previews: PreviewProvider {
                 viewModel: SearchViewModel(
                     apiClient: .live,
                     podcasts: [.mock, .mock]
-                    )
+                )
                 
             )
         }
