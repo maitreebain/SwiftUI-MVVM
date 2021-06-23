@@ -7,20 +7,40 @@
 
 import SwiftUI
 
+class PodcastDetailViewModel: ObservableObject {
+    
+    
+}
+
 struct PodcastDetailView: View {
     
+    @StateObject var viewModel = PodcastDetailViewModel()
+    @StateObject var imageLoader = ImageLoader()
     let podcast: Podcast
     let episodes: [Episode]
     
     var body: some View {
         List {
             VStack {
-                Image("")
-                    .frame(width: 200, height: 200, alignment: .center)
-                    .background(Color.gray)
+                Group{
+                    if let image = imageLoader.image {
+                        Image(uiImage: image)
+                            .resizable()
+                    } else {
+                        Rectangle()
+                            .foregroundColor(.gray)
+                    }
+                }
+                .onAppear {
+                    imageLoader.onAppear(podcast.artworkUrl100)
+                }
+                .frame(width: 200, height: 200, alignment: .center)
+                .background(Color.gray)
+                .cornerRadius(4.0)
+                .border(Color.white, width: 8)
                 VStack(alignment: .leading) {
                     Text(podcast.collectionName)
-                        .font(.largeTitle)
+                        .font(.largeTitle).bold()
                     Text(podcast.artistName)
                         .padding(.bottom)
                     Text("Episodes")
@@ -44,7 +64,10 @@ struct PodcastDetailView_Previews: PreviewProvider {
         NavigationView {
             PodcastDetailView(
                 podcast: .mock,
-                episodes: [.mock]
+                episodes: [.mock,
+                           .mock,
+                           .mock
+                ]
             )
             
         }
