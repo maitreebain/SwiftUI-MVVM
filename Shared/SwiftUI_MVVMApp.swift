@@ -10,9 +10,7 @@ import SwiftUI
 @main
 struct SwiftUI_MVVMApp: App {
     var body: some Scene {
-        _ = try! testDecoding()
-
-        return WindowGroup {
+        WindowGroup {
             NavigationView {
                 ContentView(viewModel: SearchViewModel(apiClient: .live))
                     .navigationBarTitle("Podcasts")
