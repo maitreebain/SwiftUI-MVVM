@@ -10,10 +10,12 @@ import SwiftUI
 @main
 struct SwiftUI_MVVMApp: App {
     var body: some Scene {
-        WindowGroup {
+        _ = try! testDecoding()
+
+        return WindowGroup {
             NavigationView {
-            ContentView(viewModel: SearchViewModel(apiClient: .live))
-                .navigationBarTitle("Podcasts")
+                ContentView(viewModel: SearchViewModel(apiClient: .live))
+                    .navigationBarTitle("Podcasts")
             }
         }
     }

@@ -102,7 +102,9 @@
 				80BC40112614F37A00034765 /* Tests macOS */,
 				80BC3FF42614F37A00034765 /* Products */,
 			);
+			indentWidth = 4;
 			sourceTree = "<group>";
+			tabWidth = 4;
 		};
 		80BC3FEB2614F37800034765 /* Shared */ = {
 			isa = PBXGroup;

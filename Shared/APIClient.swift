@@ -63,8 +63,20 @@ struct Episode: Decodable {
     let episodeGuid: UUID
 }
 
-struct LookupEnvelope: Decodable {
+struct LookupEnvelope {
     let results: [Episode]
+}
+
+extension LookupEnvelope: Decodable {
+    enum CodingKeys: String, CodingKey {
+        case results
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let episodes = try container.decode([FailableDecodable<Episode>].self, forKey: .results)
+        self.results = episodes.compactMap { $0.base }
+    }
 }
 
 extension Podcast {
@@ -124,3 +136,11 @@ extension Episode {
  "wrapperType": "podcastEpisode"
  
  */
+
+private struct FailableDecodable<Base : Decodable> : Decodable {
+    let base: Base?
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        self.base = try? container.decode(Base.self)
+    }
+}
