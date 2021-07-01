@@ -68,7 +68,9 @@ struct PodcastDetailView_Previews: PreviewProvider {
                            .mock,
                            .mock
                 ]
-            )
+            ).navigationBarItems(trailing: Button(action: {print("pressed shared")}, label: {
+                Text("Share")
+            }))
             
         }
     }
