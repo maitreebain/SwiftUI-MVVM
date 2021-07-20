@@ -56,7 +56,11 @@ struct PodcastDetailView: View {
             
         }
         .navigationTitle("Podcast").navigationBarItems(trailing: Button(
-                                                        action:{print("pressed shared")},
+                                                        action:{
+//                                                            let activityController = UIActivityViewController(activityItems: <#T##[Any]#>, applicationActivities: <#T##[UIActivity]?#>)
+                                                            print("pressed shared")
+                                                            
+                                                        },
                                                         label: {
                                                             Text("Share")
                                                         }))
