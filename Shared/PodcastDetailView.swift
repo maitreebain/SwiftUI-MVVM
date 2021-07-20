@@ -6,10 +6,29 @@
 //
 
 import SwiftUI
+import Combine
 
 class PodcastDetailViewModel: ObservableObject {
+    var podcastAPIClient: APIClient
+    @Published var episodes = [Episode]()
+    private var cancellable: Cancellable?
     
+    init(apiClient: APIClient = .live) {
+        self.podcastAPIClient = apiClient
+    }
     
+    func onAppear(_ podcast: Podcast) {
+        self.cancellable = podcastAPIClient.lookup(podcast.collectionId)
+            .receive(on: DispatchQueue.main)
+            .sink(
+                receiveCompletion: { completion in
+                    
+                    print("error")
+                },
+                receiveValue: { envelope in
+                    self.episodes = envelope.results
+                })
+    }
 }
 
 struct PodcastDetailView: View {
@@ -17,7 +36,6 @@ struct PodcastDetailView: View {
     @StateObject var viewModel = PodcastDetailViewModel()
     @StateObject var imageLoader = ImageLoader()
     let podcast: Podcast
-    let episodes: [Episode]
     
     var body: some View {
         List {
@@ -47,37 +65,61 @@ struct PodcastDetailView: View {
                         .font(.largeTitle)
                 }.frame(maxWidth: .infinity, alignment: .leading)
             }
-            ForEach(episodes, id: \.episodeGuid) { episode in
+            ForEach(viewModel.episodes, id: \.episodeGuid) { episode in
                 HStack{
                     Image(systemName: "play.circle")
-                    Text(episode.trackName)
-                }
+                    VStack.init(alignment: .leading) {
+                        Text(episode.trackName).font(.title3)
+                        Text(episode.description).lineLimit(2)
+                    }
+                    Spacer()
+                    Button("share") {
+                        let activityController = UIActivityViewController(activityItems: [episode.episodeUrl], applicationActivities: [])
+                        UIApplication.shared.windows.first?.rootViewController?.present(activityController, animated: true, completion: nil)
+                    }
+                }.buttonStyle(PlainButtonStyle())
             }
             
         }
-        .navigationTitle("Podcast").navigationBarItems(trailing: Button(
-                                                        action:{
-//                                                            let activityController = UIActivityViewController(activityItems: <#T##[Any]#>, applicationActivities: <#T##[UIActivity]?#>)
-                                                            print("pressed shared")
-                                                            
-                                                        },
-                                                        label: {
-                                                            Text("Share")
-                                                        }))
+        .onAppear(perform: {
+            viewModel.onAppear(podcast)
+        })
+        .navigationTitle("Podcast")
+        .navigationBarItems(
+            trailing: Button(
+                action:{
+                    let activityController = UIActivityViewController(activityItems: [podcast.collectionViewUrl], applicationActivities: [])
+                    UIApplication.shared.windows.first?.rootViewController?.present(activityController, animated: true, completion: nil)
+                    
+                },
+                label: {
+                    Text("Share")
+                }
+            )
+        )
     }
 }
 
 struct PodcastDetailView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            PodcastDetailView(
-                podcast: .mock,
-                episodes: [.mock,
-                           .mock,
-                           .mock
-                ]
+            PodcastDetailView.init(
+                viewModel: .init(
+                    apiClient: .init(
+                        search: {_ in
+                            fatalError("entered search")
+                        },
+                        lookup: { _ in
+                            Just(LookupEnvelope(results: [.mock, .mock, .mock])
+                            )
+                            .setFailureType(to: Error.self)
+                            .eraseToAnyPublisher()
+                        }
+                    )
+                ),
+                imageLoader: .init(),
+                podcast: .mock
             )
-            
         }
     }
 }

@@ -20,6 +20,7 @@ struct Podcast: Decodable {
     let artworkUrl60: String
     let artworkUrl100: String
     let genres: [String]
+    let collectionViewUrl: URL
 }
 
 struct FetchEpisodeEnvelope: Decodable {
@@ -46,7 +47,10 @@ extension APIClient {
         
         lookup: { id in
             URLSession.shared.dataTaskPublisher(for: URL(string: "https://itunes.apple.com/lookup?id=\(id)&country=US&media=podcast&entity=podcastEpisode&limit=100")!)
-                .map { $0.data }
+                .map {
+                    $0.data
+                    
+                }
                 .decode(type: LookupEnvelope.self, decoder: JSONDecoder())
                 .eraseToAnyPublisher()
         }
@@ -60,7 +64,7 @@ struct Episode: Decodable {
     let description: String
     let artworkUrl600: String
     let episodeUrl: String
-    let episodeGuid: UUID
+    let episodeGuid: String
 }
 
 struct LookupEnvelope {
@@ -88,12 +92,13 @@ extension Podcast {
         artworkUrl30: "https://is2-ssl.mzstatic.com/image/thumb/Podcasts115/v4/46/07/63/46076365-bf2b-ac72-a36a-6c159a211256/mza_16830136364766719488.jpg/160x160bb.jpg",
         artworkUrl60: "https://is2-ssl.mzstatic.com/image/thumb/Podcasts115/v4/46/07/63/46076365-bf2b-ac72-a36a-6c159a211256/mza_16830136364766719488.jpg/160x160bb.jpg",
         artworkUrl100: "https://is2-ssl.mzstatic.com/image/thumb/Podcasts115/v4/46/07/63/46076365-bf2b-ac72-a36a-6c159a211256/mza_16830136364766719488.jpg/160x160bb.jpg",
-        genres: ["Pop"])
+        genres: ["Pop"],
+        collectionViewUrl: URL(string: "www.apple.com")!)
 }
 
 extension Episode {
     
-    static let mock = Self.init(trackTimeMillis: 0, trackName: "Halo", description: "", artworkUrl600: "https://is2-ssl.mzstatic.com/image/thumb/Podcasts115/v4/46/07/63/46076365-bf2b-ac72-a36a-6c159a211256/mza_16830136364766719488.jpg/600x600bb.jpg", episodeUrl: "", episodeGuid: UUID())
+    static let mock = Self.init(trackTimeMillis: 0, trackName: "Halo", description: "This is a description", artworkUrl600: "https://is2-ssl.mzstatic.com/image/thumb/Podcasts115/v4/46/07/63/46076365-bf2b-ac72-a36a-6c159a211256/mza_16830136364766719488.jpg/600x600bb.jpg", episodeUrl: "", episodeGuid: "Halo")
 }
 
 //https://itunes.apple.com/lookup?id=1251196416&country=US&media=podcast&entity=podcastEpisode&limit=100

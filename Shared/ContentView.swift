@@ -59,7 +59,7 @@ struct ContentView: View {
                 
                 ForEach(viewModel.podcasts, id: \Podcast.collectionId) { (podcast) in
                     NavigationLink.init(
-                        destination: PodcastDetailView(podcast: podcast, episodes: []),
+                        destination: PodcastDetailView(podcast: podcast),
                         label: {
                             PodcastRowView(podcast: podcast)
                         })
