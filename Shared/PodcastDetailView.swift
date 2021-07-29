@@ -73,10 +73,12 @@ struct PodcastDetailView: View {
                         Text(episode.description).lineLimit(2)
                     }
                     Spacer()
-                    Button("share") {
+                    Button(action:{
                         let activityController = UIActivityViewController(activityItems: [episode.episodeUrl], applicationActivities: [])
                         UIApplication.shared.windows.first?.rootViewController?.present(activityController, animated: true, completion: nil)
-                    }
+                    }, label: {
+                        Image(systemName: "square.and.arrow.up")
+                    })
                 }.buttonStyle(PlainButtonStyle())
             }
             
@@ -93,7 +95,7 @@ struct PodcastDetailView: View {
                     
                 },
                 label: {
-                    Text("Share")
+                    Text("square.and.arrow.up")
                 }
             )
         )
