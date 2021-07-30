@@ -69,7 +69,7 @@ struct PodcastDetailView: View {
                 HStack{
                     Image(systemName: "play.circle")
                     VStack.init(alignment: .leading) {
-                        Text(episode.trackName).font(.title3)
+                        Text(episode.trackName).font(.title3).bold()
                         Text(episode.description).lineLimit(2)
                     }
                     Spacer()
@@ -95,7 +95,7 @@ struct PodcastDetailView: View {
                     
                 },
                 label: {
-                    Text("square.and.arrow.up")
+                    Image(systemName: "square.and.arrow.up")
                 }
             )
         )
