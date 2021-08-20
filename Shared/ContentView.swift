@@ -12,11 +12,13 @@ class SearchViewModel: ObservableObject {
     
     @Published var podcasts = [Podcast]()
     var cancellable: Cancellable?
-    var apiClient: APIClient
+    let apiClient: APIClient
+    let audioClient: AudioPlayerClient
     @Published var search = ""
     
-    init(apiClient: APIClient, podcasts: [Podcast] = []) {
+    init(apiClient: APIClient, audioClient: AudioPlayerClient, podcasts: [Podcast] = []) {
         self.apiClient = apiClient
+        self.audioClient = audioClient
         self.podcasts = podcasts
         self.cancellable = $search
             .debounce(for: 0.5, scheduler: DispatchQueue.main)
@@ -111,6 +113,7 @@ struct ContentView_Previews: PreviewProvider {
             ContentView(
                 viewModel: SearchViewModel(
                     apiClient: .live,
+                    audioClient: .live,
                     podcasts: [.mock, .mock]
                 )
                 

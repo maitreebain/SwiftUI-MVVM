@@ -12,7 +12,8 @@ struct SwiftUI_MVVMApp: App {
     var body: some Scene {
         WindowGroup {
             NavigationView {
-                ContentView(viewModel: SearchViewModel(apiClient: .live))
+                ContentView(viewModel: SearchViewModel(apiClient: .live,
+                                                       audioClient: .live))
                     .navigationBarTitle("Podcasts")
             }
         }

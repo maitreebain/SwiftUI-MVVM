@@ -7,14 +7,17 @@
 
 import SwiftUI
 import Combine
+import AVFoundation
 
 class PodcastDetailViewModel: ObservableObject {
-    var podcastAPIClient: APIClient
+    let podcastAPIClient: APIClient
+    let audioClient: AudioPlayerClient
     @Published var episodes = [Episode]()
     private var cancellable: Cancellable?
     
-    init(apiClient: APIClient = .live) {
+    init(apiClient: APIClient = .live, audioClient: AudioPlayerClient = .live) {
         self.podcastAPIClient = apiClient
+        self.audioClient = audioClient
     }
     
     func onAppear(_ podcast: Podcast) {
@@ -28,6 +31,11 @@ class PodcastDetailViewModel: ObservableObject {
                 receiveValue: { envelope in
                     self.episodes = envelope.results
                 })
+    }
+    
+    func playButtonTapped(episode: Episode) {
+        
+        self.audioClient.play( URL(string:episode.episodeUrl)!)
     }
 }
 
@@ -67,7 +75,11 @@ struct PodcastDetailView: View {
             }
             ForEach(viewModel.episodes, id: \.episodeGuid) { episode in
                 HStack{
-                    Image(systemName: "play.circle")
+                    Button(action: {
+                        viewModel.playButtonTapped(episode: episode)
+                    }, label: {
+                        Image(systemName: "play.circle")
+                    })
                     VStack.init(alignment: .leading) {
                         Text(episode.trackName).font(.title3).bold()
                         Text(episode.description).lineLimit(2)
@@ -117,7 +129,8 @@ struct PodcastDetailView_Previews: PreviewProvider {
                             .setFailureType(to: Error.self)
                             .eraseToAnyPublisher()
                         }
-                    )
+                    ),
+                    audioClient: .live
                 ),
                 imageLoader: .init(),
                 podcast: .mock
