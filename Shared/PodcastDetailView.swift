@@ -15,7 +15,7 @@ class PodcastDetailViewModel: ObservableObject {
     @Published var episodes = [Episode]()
     private var cancellable: Cancellable?
     
-    init(apiClient: APIClient = .live, audioClient: AudioPlayerClient = .live) {
+    init(apiClient: APIClient = .live, audioClient: AudioPlayerClient) {
         self.podcastAPIClient = apiClient
         self.audioClient = audioClient
     }
@@ -35,15 +35,20 @@ class PodcastDetailViewModel: ObservableObject {
     
     func playButtonTapped(episode: Episode) {
         
-        self.audioClient.play( URL(string:episode.episodeUrl)!)
+        self.audioClient.play(URL(string:episode.episodeUrl)!)
     }
 }
 
 struct PodcastDetailView: View {
     
-    @StateObject var viewModel = PodcastDetailViewModel()
+    @StateObject var viewModel: PodcastDetailViewModel
     @StateObject var imageLoader = ImageLoader()
     let podcast: Podcast
+
+    init(podcast: Podcast, audioClient: AudioPlayerClient) {
+        self._viewModel = StateObject(wrappedValue: PodcastDetailViewModel(audioClient: audioClient))
+        self.podcast = podcast
+    }
     
     var body: some View {
         List {
@@ -117,24 +122,27 @@ struct PodcastDetailView: View {
 struct PodcastDetailView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            PodcastDetailView.init(
-                viewModel: .init(
-                    apiClient: .init(
-                        search: {_ in
-                            fatalError("entered search")
-                        },
-                        lookup: { _ in
-                            Just(LookupEnvelope(results: [.mock, .mock, .mock])
-                            )
-                            .setFailureType(to: Error.self)
-                            .eraseToAnyPublisher()
-                        }
-                    ),
-                    audioClient: .live
-                ),
-                imageLoader: .init(),
-                podcast: .mock
+            PodcastDetailView(
+                podcast: .mock,
+                audioClient: .live
             )
+//                viewModel: .init(
+//                    apiClient: .init(
+//                        search: {_ in
+//                            fatalError("entered search")
+//                        },
+//                        lookup: { _ in
+//                            Just(LookupEnvelope(results: [.mock, .mock, .mock])
+//                            )
+//                            .setFailureType(to: Error.self)
+//                            .eraseToAnyPublisher()
+//                        }
+//                    ),
+//                    audioClient: .live
+//                ),
+//                imageLoader: .init(),
+//                podcast: .mock
+//            )
         }
     }
 }

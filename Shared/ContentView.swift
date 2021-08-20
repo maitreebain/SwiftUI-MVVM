@@ -61,7 +61,10 @@ struct ContentView: View {
                 
                 ForEach(viewModel.podcasts, id: \Podcast.collectionId) { (podcast) in
                     NavigationLink.init(
-                        destination: PodcastDetailView(podcast: podcast),
+                        destination: PodcastDetailView(
+                            podcast: podcast,
+                            audioClient: self.viewModel.audioClient
+                        ),
                         label: {
                             PodcastRowView(podcast: podcast)
                         })
